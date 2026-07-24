@@ -1,0 +1,33 @@
+{
+  "case_info": "原告某某诉被告某公司、某某劳务合同纠纷案",
+  "submitter": "原告某某",
+  "signer": "",
+  "submission_date": "",
+  "validation": {
+    "status": "resolved",
+    "checks": {
+      "identity_checked": true,
+      "dates_checked": true,
+      "amounts_checked": true,
+      "payment_status_checked": true,
+      "proof_scope_checked": true
+    },
+    "unresolved_issues": []
+  },
+  "evidence_groups": [
+    {
+      "number": 1,
+      "evidence_name": "原告与被告微信聊天记录截图",
+      "evidence_form": "电子数据打印件",
+      "proof_object": "原告自某年某月起与被告就工作安排持续沟通，结合其他证据拟证明双方关系建立及原告实际提供劳务。",
+      "materials": [
+        {
+          "path": "materials/01-联系人资料页.jpg",
+          "source": "被告微信聊天录屏.mp4",
+          "source_time": "00:00:03",
+          "fact": "锁定聊天账号主体"
+        }
+      ]
+    }
+  ]
+}

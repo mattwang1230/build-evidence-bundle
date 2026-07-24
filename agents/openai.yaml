@@ -1,0 +1,4 @@
+interface:
+  display_name: "证据清单与证据材料卷"
+  short_description: "按标准样本生成可核验的证据清单与内嵌证据材料Word卷宗"
+  default_prompt: "使用 $build-evidence-bundle 将案件材料整理为可核验的证据清单与内嵌证据材料 Word 文件。"
