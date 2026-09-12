@@ -1,4 +1,4 @@
 interface:
   display_name: "证据清单与证据材料卷"
-  short_description: "按标准样本生成可核验的证据清单与内嵌证据材料Word卷宗"
-  default_prompt: "使用 $build-evidence-bundle 将案件材料整理为可核验的证据清单与内嵌证据材料 Word 文件。"
+  short_description: "按请求、法律要件和材料位置生成可回指的证据清单与内嵌材料Word卷"
+  default_prompt: "使用 $build-evidence-bundle 先检测运行能力并只读盘点案件图片、视频和Office材料；用户已明确授权安装依赖时由Agent使用可信软件源安装并验证，FFmpeg与FFprobe按同一套件处理，LibreOffice仅在Office材料确需入卷时按需建议。缺少起诉状、答辩状或明确请求抗辩时，先按内置流程每轮询问1至3项，收到回答后再生成Manifest或Word。按请求/抗辩—法律要件—待证事实—证据作用—材料位置建立v19映射和覆盖矩阵；不能确认的信息保留缺失并说明影响。Office派生页须通过既有v18 sidecar。本Skill不上传材料，也不执行脱敏。"

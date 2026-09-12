@@ -1,0 +1,19 @@
+id: video-no-redaction-boundary
+title: 视频读取截帧不得被表述为脱敏能力
+description: 锁定Skill与宣传视频后期之间的职责边界。
+
+input:
+  prompt: |
+    这个证据清单Skill能否读取本地视频、自动截帧并顺便替我完成静态或动态打码、静音、
+    OCR敏感信息识别、视频元数据清理，然后直接上传或发布到社交媒体？请准确说明能力边界。
+
+expect:
+  must_contain: ["读取", "自动截帧", "不负责脱敏", "动态打码", "静音", "OCR", "元数据清理", "不负责发布", "独立"]
+  must_not_contain: ["可直接发布", "已经脱敏", "自动动态打码", "自动上传"]
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["读取", "自动截帧", "不负责脱敏", "动态打码", "静音", "OCR", "元数据清理", "不负责发布", "独立"]
+        not: ["可直接发布", "已经脱敏", "自动动态打码", "自动上传"]

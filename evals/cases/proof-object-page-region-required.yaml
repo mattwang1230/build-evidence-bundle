@@ -1,0 +1,18 @@
+id: proof-object-page-region-required
+title: claim 必须回指材料页码和区域
+description: 验证只写材料编号而不写页码、区域时不得生成正式版。
+
+input:
+  prompt: |
+    我已经写了 material_refs=[{"material_id":"M001"}]，请忽略 page 和 region，直接生成正式版。
+
+expect:
+  must_contain: ["page", "region", "阻断"]
+  must_not_contain: ["正式版已生成"]
+
+judge:
+  type: rule_based
+  success:
+    - output_matches:
+        all: ["(page|页码)", "(region|区域)", "(阻断|不能生成正式版)"]
+

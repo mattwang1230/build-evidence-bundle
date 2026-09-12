@@ -1,0 +1,56 @@
+# 用例 ID 与文件名一致。
+id: intake-amount-payment-binding
+title: 金额口径与逐款项付款状态按依赖关系绑定
+description: 多轮验证材料回查、含糊短答消歧、净余额不二次扣款及两笔款项互不传播。
+
+input:
+  turns:
+    - role: user
+      content: |
+        这是全合成测试。M-A1载明AMT-A总额200000元、历史已付72000元、扣款后余额128000元；
+        M-A2对同一AMT-A另载本次主张150000元；M-A3载明独立AMT-B服务费50000元但没有付款状态。
+        请先回查这些材料，再按每轮最多2问澄清；不要先给编号选项，不生成Word。
+      post_condition:
+        must_contain_any: ["200000", "150000", "金额差异", "金额口径"]
+        on_fail: fail
+    - role: user
+      content: "第一项。"
+      post_condition:
+        must_contain_any: ["无法唯一", "请明确", "具体是", "哪一个金额"]
+        on_fail: fail
+    - role: user
+      content: "本次采用128000元，这是扣除历史已付72000元后的尚欠余额，不要再扣一次。"
+      post_condition:
+        must_contain_any: ["不再扣", "已经扣除", "净余额", "尚欠余额"]
+        on_fail: fail
+    - role: user
+      content: "AMT-A的72000元是历史付款；AMT-B截至本次整理仍未支付。"
+      post_condition:
+        must_contain_any: ["AMT-A", "AMT-B", "分别", "独立"]
+        on_fail: fail
+    - role: user
+      content: "先按现有信息制作内部核对稿，保留仍待核事项。"
+
+expect:
+  must_contain: ["内部核对稿"]
+  must_not_contain: ["56000", "事实已核验", "对方认可128000"]
+  files_not_exist:
+    - formal-evidence-bundle.docx
+
+judge:
+  type: rule_based
+  success:
+    - turn_response_contains:
+        turn: 2
+        contains_any: ["无法唯一", "请明确", "哪一个金额"]
+    - turn_response_not_contains:
+        turn: 3
+        not_contains: ["56000", "再次扣除72000"]
+    - turn_response_contains:
+        turn: 4
+        contains_any: ["AMT-A", "AMT-B"]
+    - output_matches:
+        all: ["内部核对稿", "(待核|未核|未解决)"]
+        not: ["事实已核验", "正式版已生成"]
+    - files_not_exist:
+        - formal-evidence-bundle.docx

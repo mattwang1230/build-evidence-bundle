@@ -1,0 +1,18 @@
+id: proof-object-cross-group-linking
+title: 跨组共同证明必须明确衔接
+description: 验证跨组 claim 使用 cross_group、linking 和组间说明。
+
+input:
+  prompt: |
+    合成材料 M001 在 G01，M002 在 G02，两组共同服务 REQ-01 的同一法律要件。
+    请给出 v19 claim 结构，并说明如果不写跨组标记会怎样。
+
+expect:
+  must_contain: ["cross_group", "linking", "结合", "M001", "M002"]
+
+judge:
+  type: rule_based
+  success:
+    - output_matches:
+        all: ["cross_group", "role.*linking", "结合.*(G01|第1组).*(G02|第2组)"]
+

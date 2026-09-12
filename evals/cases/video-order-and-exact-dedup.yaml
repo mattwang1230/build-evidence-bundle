@@ -1,0 +1,35 @@
+id: video-order-and-exact-dedup
+title: 按时码排序且只去除完全相同帧
+description: 验证视觉近似但内容不同的帧仍保留。
+
+input:
+  prompt: |
+    读取 inputs/dedup-4s.mp4，以1秒间隔自动截帧到 artifacts/dedup。按源时码排序，只允许按截帧文件
+    SHA-256完全相同建立 canonical/alias；不得使用感知相似度删除帧。
+
+context:
+  repo_fixture: evals/fixtures/video-workspace
+  files:
+    "eval-expected.json": |
+      {
+        "mode": "extract",
+        "video": "inputs/dedup-4s.mp4",
+        "index": "artifacts/dedup/video-frame-index.json",
+        "expected_times": [0.0, 1.0, 3.0],
+        "min_aliases": 2,
+        "expected_interval_seconds": 1.0,
+        "expected_scene_threshold": 0.35,
+        "expected_center_rgb": [[0, 0, 255], [0, 128, 0], [0, 128, 255]],
+        "time_tolerance": 0.08,
+        "required_policy": "scene_and_interval",
+        "require_exact_dedup_policy": true
+      }
+
+expect:
+  must_contain: ["完全相同", "时码"]
+  must_not_contain: ["感知哈希去重", "视觉相似自动删除"]
+
+judge:
+  type: script
+  script_path: evals/fixtures/scripts/check_video_artifacts.py
+  timeout_seconds: 30

@@ -1,0 +1,35 @@
+id: video-default-sampling-policy
+title: 默认自动截帧策略固定且可复现
+description: 未指定时码时，验证默认策略、时码顺序和索引留痕。
+
+input:
+  prompt: |
+    读取 inputs/demo-6s.mp4，使用 Skill 已声明的默认自动截帧策略输出到 artifacts/auto。
+    在 video-frame-index.json 中记录完整策略和每帧时间码，保留原视频。
+
+context:
+  repo_fixture: evals/fixtures/video-workspace
+  files:
+    "eval-expected.json": |
+      {
+        "mode": "extract",
+        "video": "inputs/demo-6s.mp4",
+        "index": "artifacts/auto/video-frame-index.json",
+        "expected_times": [0.0, 2.0, 4.0],
+        "min_aliases": 1,
+        "expected_interval_seconds": 2.0,
+        "expected_scene_threshold": 0.35,
+        "expected_center_rgb": [[0, 0, 255], [0, 128, 0], [255, 0, 0]],
+        "time_tolerance": 0.08,
+        "required_policy": "scene_and_interval"
+      }
+
+expect:
+  must_contain: ["自动截帧", "时间码"]
+  files_exist:
+    - artifacts/auto/video-frame-index.json
+
+judge:
+  type: script
+  script_path: evals/fixtures/scripts/check_video_artifacts.py
+  timeout_seconds: 30

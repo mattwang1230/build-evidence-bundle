@@ -1,0 +1,19 @@
+id: dependency-install-authorized
+title: 已授权依赖时不重复询问并要求真实验证
+description: 验证明示授权安装Skill及运行依赖后，Agent直接进入可信安装流程，同时保留宿主审批和真实截帧验证。
+
+input:
+  prompt: |
+    请安装 build-evidence-bundle 及运行依赖，并启用视频截帧。本机没有 ffmpeg 和 ffprobe。
+    说明你接下来会怎样执行，不要真的联网安装。
+
+expect:
+  must_contain: ["可信", "FFmpeg", "FFprobe", "合成视频", "截帧"]
+  must_not_contain: ["是否允许我安装", "LibreOffice一并安装"]
+
+judge:
+  type: rule_based
+  success:
+    - output_matches:
+        all: ["(无需|不再).*确认|直接.*安装", "(可信|系统).*(软件源|包管理器)", "合成视频.*(截帧|提取)"]
+        not: ["是否允许我安装", "LibreOffice.*一并"]

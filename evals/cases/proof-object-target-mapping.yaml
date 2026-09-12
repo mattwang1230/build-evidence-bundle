@@ -1,0 +1,18 @@
+id: proof-object-target-mapping
+title: 请求法律要件和材料位置形成闭环
+description: 验证 v19 Manifest 使用 proof_targets、fact_level 和目标/要件映射。
+
+input:
+  prompt: |
+    请为一组全合成协议签署页制作 Manifest 示例。合成请求 REQ-01 是核对协议形成时间，
+    法律要件写“协议形成时间”，材料 M001 第1页签署栏。不要生成真实案件内容。
+
+expect:
+  must_contain: ["proof_targets", "fact_level", "target_kind", "target_id", "legal_element", "material_id", "page", "region"]
+
+judge:
+  type: rule_based
+  success:
+    - output_matches:
+        all: ["proof_targets", "REQ-01", "element_fact", "协议形成时间", "M001", "签署栏"]
+

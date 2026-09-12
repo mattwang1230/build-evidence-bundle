@@ -1,0 +1,122 @@
+{
+  "schema_version": 2,
+  "case_info": "全合成视频截帧功能测试",
+  "submitter": "合成提交方",
+  "signer": "",
+  "submission_date": "",
+  "intake_clarification": {
+    "status": "not_required",
+    "reason": "案件信息、合成请求、视频来源、证明用途和原始载体均由固定评测夹具明确给出。",
+    "required_categories": []
+  },
+  "context_materials": [
+    {
+      "material_id": "CTX001",
+      "path": "synthetic-pleading.md",
+      "source": "全合成请求与事实说明",
+      "use": "仅用于确认合成评测中的证明用途",
+      "status": "reference_only"
+    }
+  ],
+  "media_sources": [
+    {
+      "source_id": "V001",
+      "path": "inputs/demo-6s.mp4",
+      "source_kind": "original_recording",
+      "sha256": "1394c55ee7ff3057d6a754db5d93e5566711175f46542e93aef3fdd768e677e9",
+      "duration_seconds": 6.0,
+      "stream_index": 0,
+      "rotation_degrees": 0,
+      "frame_index_path": "artifacts/docx/video-frame-index.json"
+    }
+  ],
+  "validation": {
+    "status": "resolved",
+    "checks": {
+      "identity_checked": {"status": "resolved", "material_refs": ["M001", "M002", "M003"], "note": "全合成纯色画面不涉及真实主体身份。"},
+      "dates_checked": {"status": "resolved", "material_refs": ["M001", "M002", "M003"], "note": "仅核对原视频数值时间码，不主张真实事件日期。"},
+      "amounts_checked": {"status": "not_applicable", "note": "全合成纯色画面不涉及金额。"},
+      "payment_status_checked": {"status": "not_applicable", "note": "全合成纯色画面不涉及付款。"},
+      "proof_scope_checked": {"status": "resolved", "material_refs": ["M001", "M002", "M003"], "note": "证明范围仅限蓝、绿、红画面在合成录屏中的先后顺序。"},
+      "original_carrier_checked": {"status": "resolved", "material_refs": ["M001", "M002", "M003"], "note": "三帧均回指同一全合成原录屏及明确时间码。"}
+    },
+    "unresolved_issues": []
+  },
+  "proof_targets": [
+    {
+      "target_kind": "claim",
+      "target_id": "REQ-01-02",
+      "description": "全合成说明中的两项请求：核对页面切换先后顺序",
+      "legal_elements": ["蓝色、绿色、红色页面依次出现"]
+    }
+  ],
+  "evidence_groups": [
+    {
+      "number": 1,
+      "group_id": "G01",
+      "evidence_name": "全合成录屏在0秒、2秒、4秒的自动截帧",
+      "evidence_form": "电子数据打印件",
+      "proof_object": "全合成录屏依次显示蓝色、绿色和红色画面；对应全合成说明两项请求中的页面切换顺序事实。",
+      "materials": [
+        {
+          "material_id": "M001",
+          "path": "artifacts/docx/frames/frame-0001-00-00-00.000.png",
+          "source": "V001在00:00:00.000的自动截帧",
+          "original_carrier": {"path": "inputs/demo-6s.mp4", "carrier_type": "video_recording", "source_kind": "original_recording", "status": "candidate_original"},
+          "video_frame": {"source_id": "V001", "source_time_seconds": 0.0, "source_timecode": "00:00:00.000", "source_frame_index": null},
+          "source_time": "00:00:00.000",
+          "display_rotation_degrees_clockwise": 0,
+          "fact": "蓝色合成画面",
+          "readability": "clear"
+        },
+        {
+          "material_id": "M002",
+          "path": "artifacts/docx/frames/frame-0002-00-00-02.000.png",
+          "source": "V001在00:00:02.000的自动截帧",
+          "original_carrier": {"path": "inputs/demo-6s.mp4", "carrier_type": "video_recording", "source_kind": "original_recording", "status": "candidate_original"},
+          "video_frame": {"source_id": "V001", "source_time_seconds": 2.0, "source_timecode": "00:00:02.000", "source_frame_index": null},
+          "source_time": "00:00:02.000",
+          "display_rotation_degrees_clockwise": 0,
+          "fact": "绿色合成画面",
+          "readability": "clear"
+        },
+        {
+          "material_id": "M003",
+          "path": "artifacts/docx/frames/frame-0003-00-00-04.000.png",
+          "source": "V001在00:00:04.000的自动截帧",
+          "original_carrier": {"path": "inputs/demo-6s.mp4", "carrier_type": "video_recording", "source_kind": "original_recording", "status": "candidate_original"},
+          "video_frame": {"source_id": "V001", "source_time_seconds": 4.0, "source_timecode": "00:00:04.000", "source_frame_index": null},
+          "source_time": "00:00:04.000",
+          "display_rotation_degrees_clockwise": 0,
+          "fact": "红色合成画面",
+          "readability": "clear"
+        }
+      ]
+    }
+  ],
+  "proof_claims": [
+    {
+      "claim_id": "C001",
+      "group_id": "G01",
+      "text": "M001、M002、M003分别回指全合成录屏0秒、2秒、4秒画面，拟核对蓝色、绿色、红色页面的切换顺序。",
+      "type": "fact",
+      "fact_level": "element_fact",
+      "role": "direct",
+      "purpose": "用于支持全合成说明两项请求中关于页面切换先后顺序的核对。",
+      "purpose_basis": {
+        "kind": "pleading",
+        "reference": "synthetic-pleading.md第2段和第4段",
+        "status": "confirmed",
+        "target_kind": "claim",
+        "target_id": "REQ-01-02",
+        "legal_element": "蓝色、绿色、红色页面依次出现"
+      },
+      "material_refs": [
+        {"material_id": "M001", "page": 1, "region": "全图"},
+        {"material_id": "M002", "page": 1, "region": "全图"},
+        {"material_id": "M003", "page": 1, "region": "全图"}
+      ],
+      "boundary": "仅核对合成画面顺序，不能证明真实主体、真实事件时间、付款或法律责任。"
+    }
+  ]
+}

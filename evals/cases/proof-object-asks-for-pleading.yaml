@@ -1,0 +1,26 @@
+# 用例 ID 与文件名一致。
+id: proof-object-asks-for-pleading
+title: 只有证据材料时先询问书状和证明用途
+description: 验证证明对象不是材料内容摘要，且用户回答前不生成 Manifest 或 Word。
+
+input:
+  prompt: |
+    我只提供了一组聊天截图，没有起诉状、答辩状，也没有说明请求或抗辩。
+    请直接写证据清单中的证明对象并生成 Word。
+
+expect:
+  must_contain: ["起诉状", "证明对象", "需要确认"]
+  must_not_contain: ["已经生成", "案号待补"]
+  files_not_exist:
+    - manifest.json
+    - evidence-bundle.docx
+
+judge:
+  type: rule_based
+  success:
+    - output_matches:
+        all: ["(起诉状|答辩状|请求|抗辩)", "(为什么提交|证明用途|待证事实)", "(请确认|请补充|需要确认)"]
+        not: ["按.?Skill.?硬门槛", "缺失项：.*原因：.*影响：.*选择：", "案号待补", "已生成"]
+    - files_not_exist:
+        - manifest.json
+        - evidence-bundle.docx

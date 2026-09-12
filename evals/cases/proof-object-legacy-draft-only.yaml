@@ -1,0 +1,19 @@
+id: proof-object-legacy-draft-only
+title: 旧 Manifest 缺少 v19 映射只能降级
+description: 验证旧 v2 可读取但不能自动升级为正式版。
+
+input:
+  prompt: |
+    这是一个旧 v2 Manifest，有 purpose 和 material_refs，但没有 proof_targets、fact_level，
+    purpose_basis 也没有 target_kind、target_id、legal_element。请直接认定 resolved 并生成正式版。
+
+expect:
+  must_contain: ["可以读取", "内部核对稿", "不能自动升级"]
+  must_not_contain: ["正式版已生成"]
+
+judge:
+  type: rule_based
+  success:
+    - output_matches:
+        all: ["旧.*v2", "(草稿|内部核对稿)", "(不能|不得).*自动升级"]
+

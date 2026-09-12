@@ -1,0 +1,44 @@
+# 用例 ID 与文件名一致。
+id: intake-specific-summary-confirmation
+title: 短答是只能确认具体摘要版本和字段范围
+description: 验证无命题的“是”不绑定；明确摘要后的“是”只确认实际展示快照中该版本的字段和值，且不升级事实核验。
+
+input:
+  turns:
+    - role: user
+      content: |
+        这是全合成测试。不要生成Word。先问我是否确认，但此时不要给任何具体事实命题、选项或摘要。
+      post_condition:
+        must_contain_any: ["请确认", "是否确认"]
+        on_fail: fail
+    - role: user
+      content: "是。"
+      post_condition:
+        must_contain_any: ["无法绑定", "具体确认", "需要具体", "不能据此确认"]
+        on_fail: fail
+    - role: user
+      content: |
+        请展示摘要SUMMARY-A-v1：仅列AMT-A本次采用128000元、含义为扣除历史付款后的余额；
+        付款状态仍待核。然后问我是否确认该摘要。
+      post_condition:
+        must_contain_any: ["SUMMARY-A-v1", "128000", "付款状态仍待核"]
+        on_fail: fail
+    - role: user
+      content: "是。"
+
+expect:
+  must_contain: ["SUMMARY-A-v1"]
+  must_not_contain: ["付款状态已确认", "事实已核验", "来源已核验", "全部事项已确认", "采用150000元"]
+
+judge:
+  type: rule_based
+  success:
+    - turn_response_contains:
+        turn: 2
+        contains_any: ["无法绑定", "具体确认", "需要具体", "不能据此确认"]
+    - turn_response_contains:
+        turn: 4
+        contains_any: ["SUMMARY-A-v1", "仅确认", "摘要范围"]
+    - output_matches:
+        all: ["SUMMARY-A-v1", "(仅确认|摘要范围)", "付款状态.*(待核|未确认)"]
+        not: ["事实已核验", "来源已核验", "全部事项已确认"]

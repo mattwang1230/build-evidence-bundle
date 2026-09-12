@@ -1,0 +1,42 @@
+id: video-social-media-copy-draft-only
+title: 社交媒体本地副本可截帧但只能生成草稿
+description: 验证派生副本的实际截帧、正式版阻断和内部核对稿输出。
+
+input:
+  prompt: |
+    将 inputs/demo-6s.mp4 作为已发布社交媒体视频的本地下载副本处理：使用
+    source_id=V001、source_kind=social_media_copy，按0秒截帧到 artifacts/social。
+    使用 social-media-manifest.json 先尝试生成 outputs/social/formal.docx；正式版必须失败。
+    随后使用 --allow-draft 生成 outputs/social/draft.docx，并明确该副本不是案件原始载体。
+
+context:
+  repo_fixture: evals/fixtures/video-workspace
+  files:
+    "eval-expected.json": |
+      {
+        "mode": "social_draft",
+        "video": "inputs/demo-6s.mp4",
+        "index": "artifacts/social/video-frame-index.json",
+        "manifest": "social-media-manifest.json",
+        "expected_times": [0.0],
+        "expected_center_rgb": [[0, 0, 255]],
+        "time_tolerance": 0.08,
+        "required_policy": "explicit_times",
+        "required_source_kind": "social_media_copy",
+        "formal_docx": "outputs/social/formal.docx",
+        "draft_docx": "outputs/social/draft.docx",
+        "expected_media": 1
+      }
+
+expect:
+  must_contain: ["社交媒体", "不是案件原始载体", "内部核对稿"]
+  files_exist:
+    - artifacts/social/video-frame-index.json
+    - outputs/social/draft.docx
+  files_not_exist:
+    - outputs/social/formal.docx
+
+judge:
+  type: script
+  script_path: evals/fixtures/scripts/check_video_artifacts.py
+  timeout_seconds: 30

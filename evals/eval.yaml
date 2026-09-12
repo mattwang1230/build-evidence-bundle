@@ -1,0 +1,65 @@
+# skill-up 评测配置版本；保持该值不变。
+schema_version: v1alpha1
+
+environment:
+  # Windows 本轮仅做本地开发检查；正式 skill-up 运行应转到已装 FFmpeg 的 Linux/macOS。
+  type: none
+
+skills:
+  # evals 是评测输入，不安装给被测 Agent；安装包只包含运行时 Skill 文件。
+  - source: local_path
+    path: .
+    include:
+      - SKILL.md
+      - "agents/**"
+      - "assets/**"
+      - "references/**"
+      - "scripts/**"
+
+engine:
+  name: codex
+
+cases:
+  files:
+    - evals/cases/video-intake-asks-before-formal-build.yaml
+    - evals/cases/dependency-install-skill-only.yaml
+    - evals/cases/dependency-install-authorized.yaml
+    - evals/cases/dependency-office-progressive.yaml
+    - evals/cases/intake-amount-payment-binding.yaml
+    - evals/cases/intake-choice-lifecycle-draft.yaml
+    - evals/cases/intake-specific-summary-confirmation.yaml
+    - evals/cases/intake-ai-material-review.yaml
+    - evals/cases/video-decode-and-extract-timed-frames.yaml
+    - evals/cases/video-default-sampling-policy.yaml
+    - evals/cases/video-order-and-exact-dedup.yaml
+    - evals/cases/video-source-carrier-traceability.yaml
+    - evals/cases/video-corrupt-input-stops.yaml
+    - evals/cases/video-docx-page-mapping.yaml
+    - evals/cases/video-proof-claims-timecode-bounded.yaml
+    - evals/cases/video-social-media-copy-draft-only.yaml
+    - evals/cases/video-no-redaction-boundary.yaml
+    - evals/cases/office-missing-tools-hold.yaml
+    - evals/cases/office-sidecar-not-bypassable.yaml
+    - evals/cases/proof-object-asks-for-pleading.yaml
+    - evals/cases/proof-object-traps-blocked.yaml
+    - evals/cases/proof-object-material-summary-block.yaml
+    - evals/cases/proof-object-target-mapping.yaml
+    - evals/cases/proof-object-page-region-required.yaml
+    - evals/cases/proof-object-cross-group-linking.yaml
+    - evals/cases/proof-object-legacy-draft-only.yaml
+    - evals/cases/proof-object-coverage-matrix.yaml
+    - evals/cases/public-package-privacy.yaml
+  defaults:
+    timeout_seconds: 300
+    max_turns: 10
+    collect_artifacts:
+      - "artifacts/**/*.json"
+      - "artifacts/**/*.png"
+      - "artifacts/**/*.docx"
+    expect:
+      exit_code: 0
+  parallelism: 1
+
+report:
+  formats: [json, html]
+  artifacts: [transcript]

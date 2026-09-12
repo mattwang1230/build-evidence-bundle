@@ -1,0 +1,28 @@
+{
+  "schema_version": 2,
+  "case_info": "全合成视频截帧功能测试",
+  "submitter": "合成提交方",
+  "signer": "",
+  "submission_date": "",
+  "intake_clarification": {
+    "status": "not_required",
+    "reason": "本评测的案件信息、合成请求、视频来源和证明用途均由固定夹具明确给出。",
+    "required_categories": []
+  },
+  "validation": {
+    "status": "resolved",
+    "checks": {},
+    "unresolved_issues": []
+  },
+  "context_materials": [
+    {
+      "material_id": "CTX001",
+      "path": "synthetic-pleading.md",
+      "source": "全合成请求与事实说明",
+      "use": "仅用于确认合成评测中的证明用途",
+      "status": "reference_only"
+    }
+  ],
+  "evidence_groups": [],
+  "proof_claims": []
+}

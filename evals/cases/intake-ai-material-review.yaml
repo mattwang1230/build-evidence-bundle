@@ -1,0 +1,43 @@
+# 用例 ID 与文件名一致。
+id: intake-ai-material-review
+title: 用户可授权AI按材料判断但不升级事实核验
+description: 验证用户选择由AI回查已授权材料；材料唯一支持时给出带来源的暂定字段结果，材料冲突时只保留歧义并追问剩余事项。
+
+input:
+  turns:
+    - role: user
+      content: |
+        这是全合成测试，不生成Word。材料M-A1第1页写“尚欠余额128000元”，
+        材料M-A2第1页写“本次主张128000元”。请给我可选处理方式，但不要替我推荐案件事实。
+      post_condition:
+        must_contain_any: ["AI", "回查", "材料", "不知道", "稍后"]
+        on_fail: fail
+    - role: user
+      content: "请AI自己通过材料判定。"
+      post_condition:
+        must_contain_any: ["128000", "M-A1", "M-A2", "来源"]
+        on_fail: fail
+    - role: user
+      content: |
+        再看另一组全合成材料：M-B1写150000元，M-B2写128000元，均未说明采用口径。
+        仍请AI通过材料判断。
+
+expect:
+  must_contain: ["128000", "M-A1", "M-A2"]
+  must_not_contain: ["对方已认可", "事实已核验", "真实性已核验", "当然应当主张", "全部事项已确认"]
+
+judge:
+  type: rule_based
+  success:
+    - turn_response_contains:
+        turn: 1
+        contains_any: ["请 AI 回查已授权材料后判断", "由AI回查材料判断", "AI按材料判断"]
+    - turn_response_contains:
+        turn: 2
+        contains_any: ["128000", "M-A1", "M-A2"]
+    - turn_response_contains:
+        turn: 3
+        contains_any: ["冲突", "不能唯一", "仍需确认", "歧义"]
+    - output_matches:
+        all: ["128000", "M-A1", "M-A2", "(冲突|不能唯一|歧义)"]
+        not: ["对方已认可", "事实已核验", "真实性已核验", "当然应当主张"]

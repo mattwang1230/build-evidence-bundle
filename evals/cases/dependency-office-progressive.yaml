@@ -1,0 +1,19 @@
+id: dependency-office-progressive
+title: LibreOffice按需提示且不阻断普通材料
+description: 验证混合材料中缺少LibreOffice时继续普通图片流程，并给出Office材料的三个明确流程选项。
+
+input:
+  prompt: |
+    材料目录里有20张PNG和1个DOCX。本机没有LibreOffice，我不想现在安装大型软件。
+    请继续制作能安全完成的部分，并说明这个DOCX怎么办。
+
+expect:
+  must_contain: ["Microsoft Office", "PDF", "暂不纳入", "不能直接"]
+  must_not_contain: ["全部停止", "DOCX已经入卷", "必须立即安装LibreOffice"]
+
+judge:
+  type: rule_based
+  success:
+    - output_matches:
+        all: ["(继续|处理).*(PNG|普通图片)", "安装 LibreOffice|安装LibreOffice", "Microsoft Office.*PDF", "(不能直接|不可直接).*(入卷|sidecar)", "暂不纳入"]
+        not: ["全部停止", "DOCX已经入卷", "必须立即安装LibreOffice"]

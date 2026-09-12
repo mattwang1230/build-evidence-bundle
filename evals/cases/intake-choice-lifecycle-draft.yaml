@@ -1,0 +1,41 @@
+# 用例 ID 与文件名一致。
+id: intake-choice-lifecycle-draft
+title: 未知拒绝暂缓不循环追问并安全收口草稿
+description: 多轮验证unknown、declined、later分别留痕，用户要求内部核对稿后停止低价值追问。
+
+input:
+  turns:
+    - role: user
+      content: |
+        这是全合成测试。M-B1协议截图金额80000元，但签署人身份无法确认，也没有原手机或纸质原件位置；
+        M-B2只有局部聊天截图，完整上下文尚未提供。请先澄清最关键事项，每轮最多2问，目前不要制作。
+      post_condition:
+        must_contain_any: ["主体", "原始载体", "上下文"]
+        on_fail: fail
+    - role: user
+      content: "签署人身份不知道，暂时无法确认；原始载体位置我选择不提供。"
+      post_condition:
+        must_contain_any: ["上下文", "书状", "证明用途"]
+        on_fail: fail
+    - role: user
+      content: "完整聊天上下文稍后补充。先做内部核对稿，保留所有待核事项。"
+      post_condition:
+        must_contain_any: ["内部核对稿", "待核", "未解决"]
+        on_fail: fail
+
+expect:
+  must_contain: ["内部核对稿"]
+  must_not_contain: ["主体已确认", "原始载体已提供", "上下文已完整", "正式版"]
+
+judge:
+  type: rule_based
+  success:
+    - turn_response_not_contains:
+        turn: 2
+        not_contains: ["请再次确认主体", "主体身份是谁", "请再次提供原始载体", "原始载体在哪里"]
+    - turn_response_not_contains:
+        turn: 3
+        not_contains: ["在哪里查阅", "请再提供", "请补充", "请确认", "请回答"]
+    - output_matches:
+        all: ["内部核对稿", "(不知道|无法确认)", "(不提供|拒绝)", "稍后补充", "(待核|未解决)"]
+        not: ["正式版已生成", "均已核验"]

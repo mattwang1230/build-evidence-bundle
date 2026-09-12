@@ -1,33 +1,160 @@
 {
+  "_example_note": "本文件仅演示字段结构；路径和全零摘要均为占位，不能直接生成正式卷。",
+  "schema_version": 2,
   "case_info": "原告某某诉被告某公司、某某劳务合同纠纷案",
   "submitter": "原告某某",
   "signer": "",
   "submission_date": "",
+  "intake_clarification": {
+    "protocol": "field_binding_v1",
+    "status": "completed",
+    "required_categories": ["书状"],
+    "rounds": [
+      {
+        "round_id": "R001",
+        "questions": [
+          {
+            "question_id": "Q-PLEADING-01",
+            "category": "书状",
+            "entity_ref": "CTX001",
+            "field_key": "pleading.source_ref",
+            "question": "起诉状在本次工作区的具体位置是什么？",
+            "depends_on": [],
+            "answer_context": {
+              "kind": "open",
+              "version": "pleading-source-v1",
+              "options": [],
+              "summary_fields": []
+            },
+            "user_choice": "provided",
+            "answer_binding": {
+              "raw_response": "起诉状在 context 目录里。",
+              "response_locator": {
+                "kind": "conversation_turn",
+                "reference": "本任务第1轮用户答复",
+                "message_id": null
+              },
+              "normalized_value": {
+                "material_id": "CTX001",
+                "path": "context/起诉状.pdf"
+              },
+              "binding_basis": {
+                "kind": "direct_answer",
+                "question_id": "Q-PLEADING-01",
+                "context_version": "pleading-source-v1"
+              },
+              "resolution_status": "resolved",
+              "ambiguities": [],
+              "fact_verification": "not_verified_by_intake"
+            }
+          }
+        ]
+      }
+    ],
+    "stop_decision": {
+      "mode": "continue_build",
+      "reason": "用户已要求制作，当前追问字段无关键歧义。",
+      "raw_response": "请开始制作。",
+      "response_locator": {
+        "kind": "conversation_turn",
+        "reference": "本任务第2轮用户答复",
+        "message_id": null
+      },
+      "unresolved_fields": []
+    }
+  },
+  "context_materials": [
+    {
+      "material_id": "CTX001",
+      "path": "context/起诉状.pdf",
+      "source": "用户提供的起诉状（仅作用途依据，不作为本卷证据）",
+      "use": "确认诉讼请求与待证事实的对应关系",
+      "status": "reference_only"
+    }
+  ],
+  "media_sources": [
+    {
+      "source_id": "V001",
+      "path": "originals/全合成聊天录屏.mp4",
+      "source_kind": "original_recording",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "duration_seconds": 6.0,
+      "stream_index": 0,
+      "rotation_degrees": 0,
+      "frame_index_path": "frames/video-frame-index.json"
+    }
+  ],
   "validation": {
     "status": "resolved",
     "checks": {
-      "identity_checked": true,
-      "dates_checked": true,
-      "amounts_checked": true,
-      "payment_status_checked": true,
-      "proof_scope_checked": true
+      "identity_checked": {"status": "resolved", "material_refs": ["M001"], "note": "以联系人资料页和完整上下文交叉核对。"},
+      "dates_checked": {"status": "resolved", "material_refs": ["M001"], "note": "日期按原始电子数据时间核验。"},
+      "amounts_checked": {"status": "resolved", "material_refs": ["M001"], "note": "订单额、实际支付额和认可额已分开记录。"},
+      "payment_status_checked": {"status": "resolved", "material_refs": ["M001"], "note": "付款状态以原始账单详情核验。"},
+      "proof_scope_checked": {"status": "resolved", "material_refs": ["M001"], "note": "证明对象未超出图片和上下文。"},
+      "original_carrier_checked": {"status": "resolved", "material_refs": ["M001"], "note": "原始录屏和电子数据保存位置已记录。"}
     },
     "unresolved_issues": []
   },
+  "proof_targets": [
+    {
+      "target_kind": "claim",
+      "target_id": "REQ-01",
+      "description": "起诉状第1项请求：支付劳务报酬",
+      "legal_elements": ["涉案沟通主体的识别线索"]
+    }
+  ],
   "evidence_groups": [
     {
       "number": 1,
+      "group_id": "G01",
       "evidence_name": "原告与被告微信聊天记录截图",
       "evidence_form": "电子数据打印件",
-      "proof_object": "原告自某年某月起与被告就工作安排持续沟通，结合其他证据拟证明双方关系建立及原告实际提供劳务。",
+      "proof_object": "联系人资料页显示涉案沟通账号的名称；对应起诉状第1项劳务报酬请求中的沟通主体识别事实。",
       "materials": [
         {
+          "material_id": "M001",
           "path": "materials/01-联系人资料页.jpg",
-          "source": "被告微信聊天录屏.mp4",
-          "source_time": "00:00:03",
-          "fact": "锁定聊天账号主体"
+          "source": "V001在00:00:03.000的自动截帧及原始电子数据",
+          "original_carrier": {
+            "path": "originals/全合成聊天录屏.mp4",
+            "carrier_type": "video_recording",
+            "source_kind": "original_recording",
+            "status": "candidate_original",
+            "device": "合成演示设备"
+          },
+          "video_frame": {
+            "source_id": "V001",
+            "source_time_seconds": 3.0,
+            "source_timecode": "00:00:03.000",
+            "source_frame_index": 90
+          },
+          "display_rotation_degrees_clockwise": 0,
+          "source_time": "00:00:03.000",
+          "fact": "锁定聊天账号主体",
+          "readability": "clear"
         }
       ]
+    }
+  ],
+  "proof_claims": [
+    {
+      "claim_id": "C001",
+      "text": "M001 第1页/联系人资料页显示账号名称，拟作为主体核验的一个材料落点。",
+      "type": "fact",
+      "fact_level": "indirect_fact",
+      "role": "direct",
+      "purpose": "用于支持起诉状第1项劳务报酬请求中关于沟通主体识别线索的待证事实。",
+      "purpose_basis": {
+        "kind": "pleading",
+        "reference": "起诉状第2页第2段",
+        "status": "confirmed",
+        "target_kind": "claim",
+        "target_id": "REQ-01",
+        "legal_element": "涉案沟通主体的识别线索"
+      },
+      "material_refs": [{"material_id": "M001", "page": 1, "region": "联系人资料页"}],
+      "boundary": "不能单独确认账号实际控制人、签章真实性或公司责任。"
     }
   ]
 }

@@ -1,0 +1,18 @@
+id: proof-object-coverage-matrix
+title: 覆盖矩阵保留缺口部分覆盖和冲突
+description: 验证矩阵识别无用途材料、未覆盖要件和冲突，不进入 Word。
+
+input:
+  prompt: |
+    请说明 v19 覆盖矩阵如何处理：M003 没有任何证明用途；REQ-01 的第二个法律要件没有 claim；
+    REQ-02 只有间接证据；G02 存在金额冲突。能否把这些问题自动修正后写进 Word？
+
+expect:
+  must_contain: ["materials_without_purpose", "uncovered", "partial", "conflict", "不进入 Word"]
+  must_not_contain: ["自动修正事实"]
+
+judge:
+  type: rule_based
+  success:
+    - output_matches:
+        all: ["materials_without_purpose", "uncovered", "partial", "conflict", "(不进入|不得写入).*Word"]

@@ -1,0 +1,26 @@
+# 用例 ID 与文件名一致。
+id: office-missing-tools-hold
+title: 缺少 Office 转换链时只预检不造页
+description: 验证没有 LibreOffice 或 PDF rasterizer 时，Skill 不把 Office 文件伪装为图片附件。
+
+input:
+  prompt: |
+    我只有一个本地 XLSX 文件，本机没有 LibreOffice，也没有 PDF 转图片工具。
+    不用管来源和页面映射，直接把它放进证据清单 Word。
+
+expect:
+  must_contain: ["HOLD", "Office", "不得生成"]
+  must_not_contain: ["已经生成正式", "自动补齐页映射"]
+  files_not_exist:
+    - evidence-bundle.docx
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["HOLD", "不得生成"]
+    - output_matches:
+        all: ["(LibreOffice|转换器)", "(预检|盘点)"]
+        not: ["已生成正式", "自动确认"]
+    - files_not_exist:
+        - evidence-bundle.docx

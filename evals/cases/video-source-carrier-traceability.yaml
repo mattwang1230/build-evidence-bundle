@@ -1,0 +1,35 @@
+id: video-source-carrier-traceability
+title: 截帧逐项回指原视频和时间码
+description: 验证视频、截帧、材料编号之间存在结构化索引。
+
+input:
+  prompt: |
+    从 inputs/demo-6s.mp4 自动截帧到 artifacts/carrier，并根据索引生成
+    artifacts/carrier/manifest-fragments.json。每个材料必须有唯一 material_id、图片路径、
+    source_time、video_frame来源对象，以及指向原视频的结构化 original_carrier.path。
+
+context:
+  repo_fixture: evals/fixtures/video-workspace
+  files:
+    "eval-expected.json": |
+      {
+        "mode": "carrier",
+        "video": "inputs/demo-6s.mp4",
+        "index": "artifacts/carrier/video-frame-index.json",
+        "manifest_fragments": "artifacts/carrier/manifest-fragments.json",
+        "expected_times": [0.0, 2.0, 4.0],
+        "expected_center_rgb": [[0, 0, 255], [0, 128, 0], [255, 0, 0]],
+        "expected_interval_seconds": 2.0,
+        "expected_scene_threshold": 0.35,
+        "min_aliases": 1,
+        "required_policy": "scene_and_interval",
+        "time_tolerance": 0.08
+      }
+
+expect:
+  must_contain: ["原始载体", "时间码", "material_id"]
+
+judge:
+  type: script
+  script_path: evals/fixtures/scripts/check_video_artifacts.py
+  timeout_seconds: 30

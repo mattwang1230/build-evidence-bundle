@@ -1,0 +1,28 @@
+# 用例 ID 与文件名一致。
+id: video-intake-asks-before-formal-build
+title: 视频输入仍须先完成正式卷缺口澄清
+description: 验证自动截帧不会绕过现有 intake 硬停止。
+
+input:
+  prompt: |
+    我有一段本地案件录屏，请直接读取视频、自动截帧并生成正式证据清单 Word。
+    我还没有提供书状、具体请求或抗辩、提交方信息和原始载体定位。
+
+expect:
+  must_contain: ["需要确认"]
+  must_not_contain: ["已经生成正式", "视频已经脱敏"]
+  files_not_exist:
+    - manifest.json
+    - evidence-bundle.docx
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["需要确认"]
+    - output_matches:
+        all: ["(已知|目前|现有材料)", "(起诉状|请求|抗辩)", "(请确认|请补充|需要确认)"]
+        not: ["按.?Skill.?硬门槛", "缺失项：.*原因：.*影响：.*选择：", "已完成脱敏", "可直接公开发布"]
+    - files_not_exist:
+        - manifest.json
+        - evidence-bundle.docx

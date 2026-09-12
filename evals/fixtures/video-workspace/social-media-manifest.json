@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "case_info": "全合成社交媒体副本边界测试",
+  "submitter": "合成提交方",
+  "signer": "",
+  "submission_date": "",
+  "intake_clarification": {"status": "not_required", "reason": "全部输入均为固定全合成评测夹具。", "required_categories": []},
+  "media_sources": [
+    {
+      "source_id": "V001",
+      "path": "inputs/demo-6s.mp4",
+      "source_kind": "social_media_copy",
+      "sha256": "1394c55ee7ff3057d6a754db5d93e5566711175f46542e93aef3fdd768e677e9",
+      "duration_seconds": 6.0,
+      "stream_index": 0,
+      "rotation_degrees": 0,
+      "frame_index_path": "artifacts/social/video-frame-index.json"
+    }
+  ],
+  "validation": {
+    "status": "resolved",
+    "checks": {
+      "identity_checked": {"status": "resolved", "material_refs": ["M001"], "note": "全合成画面不涉及真实身份。"},
+      "dates_checked": {"status": "resolved", "material_refs": ["M001"], "note": "只核对副本时间码。"},
+      "amounts_checked": {"status": "not_applicable", "note": "不涉及金额。"},
+      "payment_status_checked": {"status": "not_applicable", "note": "不涉及付款。"},
+      "proof_scope_checked": {"status": "resolved", "material_refs": ["M001"], "note": "只描述蓝色合成画面。"},
+      "original_carrier_checked": {"status": "resolved", "material_refs": ["M001"], "note": "路径可定位，但来源角色明确为社交媒体派生副本。"}
+    },
+    "unresolved_issues": []
+  },
+  "evidence_groups": [
+    {
+      "number": 1,
+      "group_id": "G01",
+      "evidence_name": "全合成社交媒体副本截帧",
+      "evidence_form": "电子数据打印件",
+      "proof_object": "拟证明该全合成公开副本在0秒显示蓝色画面；仅用于功能演示。",
+      "materials": [
+        {
+          "material_id": "M001",
+          "path": "artifacts/social/frames/frame-0001-00-00-00.000.png",
+          "source": "V001在00:00:00.000的自动截帧",
+          "original_carrier": {"path": "inputs/demo-6s.mp4", "carrier_type": "video_recording", "source_kind": "social_media_copy", "status": "derived_copy_not_original"},
+          "video_frame": {"source_id": "V001", "source_time_seconds": 0.0, "source_timecode": "00:00:00.000", "source_frame_index": null},
+          "source_time": "00:00:00.000",
+          "display_rotation_degrees_clockwise": 0,
+          "fact": "蓝色合成画面",
+          "readability": "clear"
+        }
+      ]
+    }
+  ],
+  "proof_claims": [
+    {
+      "claim_id": "C001",
+      "group_id": "G01",
+      "text": "M001回指全合成公开副本0秒画面，拟核对该副本显示蓝色页面。",
+      "type": "fact",
+      "role": "direct",
+      "purpose": "仅用于全合成视频截帧功能演示。",
+      "purpose_basis": {"kind": "user_statement", "reference": "用户明确要求公开版本可以读取社交媒体本地副本并自动截帧。", "status": "confirmed"},
+      "material_refs": [{"material_id": "M001", "page": 1, "region": "全图"}],
+      "boundary": "社交媒体副本不能反推案件原始载体、真实身份或责任。"
+    }
+  ]
+}

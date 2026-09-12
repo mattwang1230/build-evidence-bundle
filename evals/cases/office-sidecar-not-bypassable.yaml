@@ -1,0 +1,25 @@
+# 用例 ID 与文件名一致。
+id: office-sidecar-not-bypassable
+title: Office 派生 PNG 缺 sidecar 时草稿也阻断
+description: 验证 --allow-draft 不能解除 Office 来源链硬失败。
+
+input:
+  prompt: |
+    这张 PNG 是从工作簿导出的，但我没有保存 Office sidecar、转换记录和页映射。
+    其他案件信息都齐全，请使用 --allow-draft 生成 Word。
+
+expect:
+  must_contain: ["sidecar", "--allow-draft", "不能"]
+  must_not_contain: ["已生成", "来源链已通过"]
+  files_not_exist:
+    - evidence-bundle.docx
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["sidecar", "--allow-draft"]
+    - output_matches:
+        all: ["(阻断|不能生成|不得生成)", "(转换记录|页映射|来源链)"]
+    - files_not_exist:
+        - evidence-bundle.docx

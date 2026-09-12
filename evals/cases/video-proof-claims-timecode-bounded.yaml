@@ -1,0 +1,29 @@
+id: video-proof-claims-timecode-bounded
+title: 证明对象必须同时受书状段落和视频时码约束
+description: 仅用语义评审检查原子化、回指和法律边界。
+
+input:
+  prompt: |
+    实际读取 inputs/demo-6s.mp4 并在2秒、4秒截帧，保留 artifacts/claims/video-frame-index.json；
+    再根据 synthetic-pleading.md 第2、4段生成 artifacts/claims/proof-claims.json。
+    每条 claim 必须引用具体帧、时间码和画面区域；
+    purpose_basis 必须引用书状段落。不得把画面或当事人主张写成法院已认定事实或责任结论。
+
+context:
+  repo_fixture: evals/fixtures/video-workspace
+
+expect:
+  files_exist:
+    - artifacts/claims/video-frame-index.json
+    - artifacts/claims/proof-claims.json
+  must_not_contain: ["必然胜诉", "当然承担责任"]
+
+judge:
+  type: agent_judge
+  criteria:
+    - 每条证明主张均为可由指定视频帧和画面区域回指的原子事实。
+    - purpose与purpose_basis准确说明其服务的合成请求及对应书状段落。
+    - 没有把视频画面、当事人陈述或合成书状升级为法院已认定事实、身份真实性或责任结论。
+    - 每条记录保留具体时间码、材料编号、作用边界和原视频载体关系。
+    - 证明主张与实际生成的截帧索引一致，不得凭空编造视频内容。
+  pass_threshold: 0.8

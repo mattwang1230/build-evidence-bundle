@@ -1,0 +1,35 @@
+id: video-docx-page-mapping
+title: 视频截帧接入现有DOCX物理页码链
+description: 验证截帧按时码进入附件，继续满足PAGE和PAGEREF门槛。
+
+input:
+  prompt: |
+    使用 inputs/demo-6s.mp4、synthetic-pleading.md 和 formal-manifest.json，按0、2、4秒
+    以 source_id=V001、source_kind=original_recording 截帧到 artifacts/docx，再生成
+    outputs/docx/evidence-bundle.docx。不得把原视频路径写入 Word可见正文；必须保留侧车索引。
+
+context:
+  repo_fixture: evals/fixtures/video-workspace
+  files:
+    "eval-expected.json": |
+      {
+        "mode": "docx",
+        "video": "inputs/demo-6s.mp4",
+        "index": "artifacts/docx/video-frame-index.json",
+        "manifest": "formal-manifest.json",
+        "docx": "outputs/docx/evidence-bundle.docx",
+        "expected_times": [0.0, 2.0, 4.0],
+        "expected_center_rgb": [[0, 0, 255], [0, 128, 0], [255, 0, 0]],
+        "time_tolerance": 0.08,
+        "expected_media": 3
+      }
+
+expect:
+  files_exist:
+    - artifacts/docx/video-frame-index.json
+    - outputs/docx/evidence-bundle.docx
+
+judge:
+  type: script
+  script_path: evals/fixtures/scripts/check_video_artifacts.py
+  timeout_seconds: 30

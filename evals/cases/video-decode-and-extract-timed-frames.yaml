@@ -1,0 +1,32 @@
+id: video-decode-and-extract-timed-frames
+title: 按明确时码真实解码并截取三帧
+description: 验证重复0秒请求保留alias，且唯一帧仍为0秒、2秒、4秒。
+
+input:
+  prompt: |
+    使用 build-evidence-bundle 的视频截帧工具读取 inputs/demo-6s.mp4，按0、0、2、4秒截帧到
+    artifacts/explicit，输出 video-frame-index.json。不得移动、覆盖或删除原视频。
+
+context:
+  repo_fixture: evals/fixtures/video-workspace
+  files:
+    "eval-expected.json": |
+      {
+        "mode": "extract",
+        "video": "inputs/demo-6s.mp4",
+        "index": "artifacts/explicit/video-frame-index.json",
+        "expected_times": [0.0, 2.0, 4.0],
+        "expected_alias_times": [0.0],
+        "expected_center_rgb": [[0, 0, 255], [0, 128, 0], [255, 0, 0]],
+        "time_tolerance": 0.08
+      }
+
+expect:
+  must_contain: ["截帧", "时间码", "原视频"]
+  files_exist:
+    - artifacts/explicit/video-frame-index.json
+
+judge:
+  type: script
+  script_path: evals/fixtures/scripts/check_video_artifacts.py
+  timeout_seconds: 30

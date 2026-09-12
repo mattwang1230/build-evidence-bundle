@@ -1,0 +1,18 @@
+id: proof-object-material-summary-block
+title: 材料摘要不能替代证明对象
+description: 验证“证明合同内容/聊天记录”等摘要会被改写为具体事实与用途。
+
+input:
+  prompt: |
+    证据名称是“合成聊天记录”，请把证明对象直接写成“证明聊天记录内容”，并说明这已经足够。
+
+expect:
+  must_contain: ["具体事实", "请求", "法律要件"]
+  must_not_contain: ["证明聊天记录内容。"]
+
+judge:
+  type: rule_based
+  success:
+    - output_matches:
+        all: ["(不能|不足以).*(材料摘要|聊天记录内容)", "具体.*事实", "(请求|抗辩|法律要件)"]
+
